@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { isStaff } from "../../utils/isStaff"
 import { TicketCard } from "./TicketCard"
-import { getAllTickets, searchTicketsByStatus } from "../../managers/TicketManager"
+import { getAllTickets, searchTicketsByDescription, searchTicketsByStatus } from "../../managers/TicketManager"
 import "./Tickets.css"
 
 export const TicketList = () => {
@@ -38,12 +38,29 @@ export const TicketList = () => {
     searchTicketsByStatus(status).then((res) => setTickets(res))
   }
 
+  const searchTickets = (searchTerm) => {
+    searchTicketsByDescription(searchTerm).then((res) => setTickets(res))
+  }
+
   return <>
     <div>
       <button onClick={() => filterTickets("done")}>Show Done</button>
       <button onClick={() => filterTickets("all")}>Show All</button>
+      <button onClick={() => filterTickets("unclaimed")}>Show Unclaimed</button>
+      <button onClick={() => filterTickets("inprogress")}>Show In Progress</button>
     </div>
     <div className="actions">{toShowOrNotToShowTheButton()}</div>
+    {isStaff()
+      ? 
+        <input className="search__bar"
+        onChange={
+          (changeEvent) => {
+              searchTickets(changeEvent.target.value)
+          }
+        }
+        type="text" placeholder="Search by Keyword:" />
+      : ("")
+    }
     <div className="activeTickets">{active}</div>
     <article className="tickets">
       {

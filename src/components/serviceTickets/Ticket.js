@@ -37,8 +37,17 @@ export const Ticket = () => {
       ...ticket,
       employee: parseInt(evt.target.value)
     }
-
+    console.log(updatedTicket)
     updateTicket(updatedTicket).then(() => fetchTicket())
+  }
+
+  const updateCompletionEvent = () => {
+    const updatedCompletion = {
+      ...ticket,
+      employee: ticket.employee.id,
+      date_completed: new Date().toISOString().slice(0, 10)
+    }
+    updateTicket(updatedCompletion).then(() => fetchTicket())
   }
 
   const ticketStatus = () => {
@@ -90,7 +99,11 @@ export const Ticket = () => {
           </div>
           {
             isStaff()
-              ? <></>
+              ? 
+                (ticket.date_completed
+                  ? ("")
+                  : <button onClick={updateCompletionEvent}>Mark Done</button>
+                )
               : <button onClick={deleteTicketEvent}>Delete</button>
           }
         </footer>
